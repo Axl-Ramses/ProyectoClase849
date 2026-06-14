@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
@@ -17,9 +17,7 @@ import {
   PRODUCT_CATEGORIES,
   CATEGORY_LABELS,
 } from "../utils/types/Skincare";
-import { useAppDispatch, useAppSelector } from "../store/hooks";
-//importando action addProduct desde el slice de skincare 
-import { addProduct } from "../store/slices/skincareSlice";
+import { supabase } from "../services/supabaseClient";
 
 type Props = CompositeScreenProps<
   BottomTabScreenProps<TabsParamList, "Products">,
@@ -27,18 +25,47 @@ type Props = CompositeScreenProps<
 >;
 
 export default function ProductsScreen({ navigation }: Props) {
-  const dispatch = useAppDispatch();
-  const products = useAppSelector((state) => state.skincare.products);
-
   const { colors } = useTheme();
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState<ProductCategory>("cleanser");
+  const [products, setProducts] = useState<any[]>([]);
 
-  const handleAddProduct = () => {
+  // Actividad 5 - Get Products
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        setProducts(data);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Actividad 5 - Create Product
+  const handleAddProduct = async () => {
     if (!name.trim() || !brand.trim()) return;
-    dispatch(addProduct({ name: name.trim(), brand: brand.trim(), category }));
+
+    const { data, error } = await supabase
+      .from("products")
+      .insert([{ name: name.trim(), brand: brand.trim(), category }])
+      .select();
+
+    if (error) {
+      console.log("Error al agregar producto:", error.message);
+      return;
+    }
+
+    if (data) {
+      setProducts((prev) => [data[0], ...prev]);
+    }
+
     setName("");
     setBrand("");
     setCategory("cleanser");
