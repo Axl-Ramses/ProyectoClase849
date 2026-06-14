@@ -23,6 +23,9 @@ export default function RegisterScreen({ navigation }: any) {
       password,
     });
 
+  console.log("DATA:", JSON.stringify(data));
+  console.log("ERROR:", JSON.stringify(error));
+
     if (error) {
       Alert.alert("Error al registrarse", error.message);
       return;
