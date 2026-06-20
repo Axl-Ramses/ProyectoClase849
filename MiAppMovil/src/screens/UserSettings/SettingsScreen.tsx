@@ -22,6 +22,14 @@ export default function SettingsScreen() {
     }
   };
 
+  function handleGoToStorage(): void {
+  if (navigationRef.isReady()) {
+    navigationRef.navigate("Almacenamiento");
+  }
+}
+
+
+ 
   return (
     <ScreenWrapper>
       <SectionTitle
@@ -53,7 +61,18 @@ export default function SettingsScreen() {
         onValueChange={toggleTheme}
         thumbColor={colors.onSecondary}
       />
-    </View>
+  </View>
+
+      <View style={[styles.section, { backgroundColor: colors.inputBackground }]}>
+        <Text style={[styles.sectionLabel, { color: colors.primary }]}>
+          Herramientas
+        </Text>
+        <CustomButton
+          title="Almacenamiento en la Nube"
+          onPress={handleGoToStorage}
+          variant="secondary"
+        />
+      </View>
 
       <View style={[styles.section, { backgroundColor: colors.inputBackground }]}>
         <Text style={[styles.sectionLabel, { color: colors.primary }]}>

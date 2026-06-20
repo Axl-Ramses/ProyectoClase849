@@ -4,6 +4,7 @@ import TabNavigator from "./TabsNavigator";
 import ProductDetailScreen from "../screens/ProductDetailScreen";
 import { useTheme } from "../contexts/ThemeContext";
 import RegisterScreen from "../screens/RegisterScreen";
+import AlmacenamientoScreen from "../screens/AlmacenamientoScreen";
 
 //1. declarar tipado para pantallas y sus parametros
 export type RootStackParamList = {
@@ -11,6 +12,7 @@ export type RootStackParamList = {
   Register: undefined;
   MainTabs: undefined;
   ProductDetail: { productId: string };
+  Almacenamiento: undefined;
 };
 
 //2. crear el stack navigator el cual va a manejar la navegacion
@@ -47,6 +49,11 @@ export default function StackNavigator() {
         name="ProductDetail"
         component={ProductDetailScreen}
         options={{ title: "Detalle del producto" }}
+      />
+      <Stack.Screen
+        name="Almacenamiento"
+        component={AlmacenamientoScreen}
+        options={{ title: "Almacenamiento" }}
       />
     </Stack.Navigator>
   );
